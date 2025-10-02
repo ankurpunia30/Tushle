@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  reports   Report[]
+  apiKeys   ApiKey[]
+
+  @@map("users")
+}
+
+// API Keys for external services
+model ApiKey {
+  id        String   @id @default(cuid())
+  name      String
+  value     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("api_keys")
+}
+
+// Content trending data
+model TrendingContent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  url         String?
+  source      String   // reddit, tiktok, pinterest, etc.
+  category    String   // fashion, technology, marketing
+  score       Float?
+  engagement  Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  reports ReportContent[]
+
+  @@map("trending_content")
+}
+
+// Generated reports
+model Report {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String   // fashion, technology, marketing
+  status      String   @default("pending") // pending, processing, completed, failed
+  filePath    String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  content ReportContent[]
+
+  @@map("reports")
+}
+
+// Junction table for reports and trending content
+model ReportContent {
+  id        String          @id @default(cuid())
+  reportId  String
+  contentId String
+  report    Report          @relation(fields: [reportId], references: [id])
+  content   TrendingContent @relation(fields: [contentId], references: [id])
+  createdAt DateTime        @default(now())
+
+  @@unique([reportId, contentId])
+  @@map("report_content")
+}
+
+// Content sources configuration
+model ContentSource {
+  id          String   @id @default(cuid())
+  name        String   @unique // reddit, tiktok, pinterest
+  isActive    Boolean  @default(true)
+  config      Json?    // Source-specific configuration
+  lastSync    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("content_sources")
+}
