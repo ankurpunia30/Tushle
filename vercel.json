@@ -15,8 +15,28 @@
       "dest": "/api/health.py"
     },
     {
+      "src": "/api/dashboard",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/api/clients",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/api/tasks", 
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/api/finance",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/api/ai/generate",
+      "dest": "/api/index.py"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "/api/test.py"
+      "dest": "/api/index.py"
     },
     {
       "src": "/(.*)",
