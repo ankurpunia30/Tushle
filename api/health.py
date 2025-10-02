@@ -1,5 +1,5 @@
 """
-Proper Vercel Python Handler
+Health check endpoint for Vercel
 """
 from http.server import BaseHTTPRequestHandler
 import json
@@ -13,15 +13,15 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        # Response data
+        # Health check response
         response_data = {
-            'message': 'Tushle AI API Working!',
-            'status': 'success',
-            'path': self.path,
-            'environment_check': {
-                'DATABASE_URL': 'SET' if os.environ.get('DATABASE_URL') else 'MISSING',
-                'GROQ_API_KEY': 'SET' if os.environ.get('GROQ_API_KEY') else 'MISSING',
-                'SECRET_KEY': 'SET' if os.environ.get('SECRET_KEY') else 'MISSING'
+            'status': 'healthy',
+            'service': 'Tushle AI API',
+            'timestamp': __import__('datetime').datetime.now().isoformat(),
+            'environment': {
+                'DATABASE_URL': 'configured' if os.environ.get('DATABASE_URL') else 'missing',
+                'GROQ_API_KEY': 'configured' if os.environ.get('GROQ_API_KEY') else 'missing',
+                'SECRET_KEY': 'configured' if os.environ.get('SECRET_KEY') else 'missing'
             }
         }
         

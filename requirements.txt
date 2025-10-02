@@ -1,6 +1,4 @@
-# Minimal requirements for Vercel - No external dependencies
-# FastAPI only
-fastapi==0.104.1
+# Basic Python handler for Vercel - No external dependencies needed
 
 # Email validation
 email-validator==2.1.0
