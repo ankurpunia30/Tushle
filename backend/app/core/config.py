@@ -10,12 +10,12 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     
     # Security
-    SECRET_KEY: str = "your-secret-key-change-in-production"
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
     ALGORITHM: str = "HS256"
     
-    # Database
-    DATABASE_URL: str = "sqlite:///./automation_dashboard.db"
+    # Database - Updated for Vercel deployment
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./automation_dashboard.db")
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
@@ -36,11 +36,9 @@ class Settings(BaseSettings):
     TWITTER_API_SECRET: Optional[str] = None
     YOUTUBE_API_KEY: Optional[str] = None
     
-    # AI Settings
-    OLLAMA_URL: str = "http://localhost:11434"
-    
-    # Content Engine Settings
-    GROQ_API_KEY: Optional[str] = None
+    # AI Settings - Updated for Vercel
+    GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
+    ENABLE_LLM_ANALYSIS: bool = True
     NEWS_API_KEY: Optional[str] = None
     REDDIT_CLIENT_ID: Optional[str] = None
     REDDIT_CLIENT_SECRET: Optional[str] = None

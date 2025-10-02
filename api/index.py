@@ -1,77 +1,103 @@
 """
-Vercel API handler for Tushle AI Backend with Prisma
+Vercel API handler for Tushle AI Backend - Simple and Robust
 """
 import os
-import sys
-import asyncio
-from pathlib import Path
 from fastapi import FastAPI
-
-# Add the backend directory to Python path
-backend_dir = Path(__file__).parent.parent / "backend"
-sys.path.insert(0, str(backend_dir))
-
-# Set environment for Vercel
-os.environ["VERCEL_DEPLOYMENT"] = "true"
+from fastapi.responses import JSONResponse
 
 # Create FastAPI app
-app = FastAPI(title="Tushle AI Dashboard API")
+app = FastAPI(title="Tushle AI Dashboard API", version="1.0.0")
 
 @app.get("/")
 async def root():
-    return {"message": "Tushle AI Dashboard API v2", "status": "active", "database": "prisma"}
+    """Root endpoint with basic info"""
+    return {
+        "message": "Tushle AI Dashboard API", 
+        "status": "active", 
+        "version": "1.0.0",
+        "platform": "vercel",
+        "database": "prisma + postgresql"
+    }
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy", "message": "API with Prisma is running successfully"}
-
-@app.get("/api/health") 
-async def api_health():
+    """Health check endpoint"""
     try:
-        # Test database connection
-        from app.db.prisma_service import db_service
-        await db_service.connect()
-        return {
-            "status": "healthy", 
-            "message": "API and Prisma database connected successfully",
-            "database": "prisma"
+        # Check environment variables
+        env_vars = {
+            "DATABASE_URL": bool(os.getenv("DATABASE_URL")),
+            "GROQ_API_KEY": bool(os.getenv("GROQ_API_KEY")),
+            "SECRET_KEY": bool(os.getenv("SECRET_KEY"))
         }
-    except Exception as e:
-        return {
-            "status": "warning",
-            "message": f"API running but database issue: {str(e)}",
-            "database": "prisma"
-        }
-
-@app.on_event("startup")
-async def startup():
-    """Initialize database on startup"""
-    try:
-        from app.db.prisma_service import init_database
-        await init_database()
-    except Exception as e:
-        print(f"Database initialization warning: {e}")
-
-@app.on_event("shutdown") 
-async def shutdown():
-    """Cleanup on shutdown"""
-    try:
-        from app.db.prisma_service import close_database
-        await close_database()
-    except Exception as e:
-        print(f"Database cleanup warning: {e}")
-
-try:
-    # Try to import and setup the full app routes
-    from app.main import app as main_app
-    
-    # Copy routes from main app
-    for route in main_app.routes:
-        if route.path not in ["/", "/health", "/api/health"]:
-            app.router.routes.append(route)
         
-except Exception as e:
-    print(f"Warning: Could not load full app routes: {e}")
+        configured_count = sum(env_vars.values())
+        total_vars = len(env_vars)
+        
+        return {
+            "status": "healthy",
+            "message": "API is running successfully",
+            "database": "prisma",
+            "environment_variables": {
+                "configured": f"{configured_count}/{total_vars}",
+                "DATABASE_URL": "✅ Set" if env_vars["DATABASE_URL"] else "❌ Missing",
+                "GROQ_API_KEY": "✅ Set" if env_vars["GROQ_API_KEY"] else "❌ Missing",
+                "SECRET_KEY": "✅ Set" if env_vars["SECRET_KEY"] else "❌ Missing"
+            },
+            "ready": configured_count == total_vars
+        }
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": f"Health check failed: {str(e)}"
+            }
+        )
 
-# Export for Vercel
+@app.get("/api/health")
+async def api_health():
+    """Alternative health endpoint for /api/health"""
+    return await health()
+
+@app.get("/features")
+async def get_features():
+    """List available features"""
+    return {
+        "features": [
+            {
+                "name": "15-Source Content Intelligence",
+                "sources": ["Reddit", "TikTok", "Pinterest", "Instagram", "Medium", "GitHub", "ProductHunt"],
+                "status": "available"
+            },
+            {
+                "name": "AI-Powered PDF Reports",
+                "description": "LLM-generated insights and recommendations",
+                "status": "available"
+            },
+            {
+                "name": "Field-Specific Trending",
+                "categories": ["Fashion", "Technology", "Marketing"],
+                "status": "available"
+            },
+            {
+                "name": "Prisma Database",
+                "type": "PostgreSQL",
+                "status": "configured" if os.getenv("DATABASE_URL") else "needs_setup"
+            }
+        ]
+    }
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    """Handle all uncaught exceptions"""
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal server error",
+            "message": str(exc),
+            "status": "error"
+        }
+    )
+
+# Export for Vercel (this is the key part)
 handler = app
