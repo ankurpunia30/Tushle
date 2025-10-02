@@ -1,103 +1,61 @@
 """
-Vercel API handler for Tushle AI Backend - Simple and Robust
+Ultra-simple working API for Tushle AI
 """
 import os
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 
-# Create FastAPI app
-app = FastAPI(title="Tushle AI Dashboard API", version="1.0.0")
+# Simple function-based approach for Vercel
+def handler(request, response):
+    import json
+    
+    if request.get('path', '/').endswith('/health'):
+        # Health check
+        env_check = {
+            "DATABASE_URL": "✅ Set" if os.environ.get("DATABASE_URL") else "❌ Missing",
+            "GROQ_API_KEY": "✅ Set" if os.environ.get("GROQ_API_KEY") else "❌ Missing",
+            "SECRET_KEY": "✅ Set" if os.environ.get("SECRET_KEY") else "❌ Missing"
+        }
+        
+        response_data = {
+            "status": "healthy",
+            "message": "Tushle AI API is working!",
+            "environment": env_check,
+            "timestamp": "2025-10-02"
+        }
+    else:
+        # Default response
+        response_data = {
+            "message": "Tushle AI Dashboard API",
+            "status": "active",
+            "version": "1.0.2",
+            "endpoints": ["/", "/health"]
+        }
+    
+    response['statusCode'] = 200
+    response['headers'] = {'Content-Type': 'application/json'}
+    response['body'] = json.dumps(response_data)
+    
+    return response
+
+# Also export for FastAPI compatibility
+from fastapi import FastAPI
+app = FastAPI()
 
 @app.get("/")
-async def root():
-    """Root endpoint with basic info"""
+def root():
     return {
-        "message": "Tushle AI Dashboard API", 
+        "message": "Tushle AI Dashboard API",
         "status": "active", 
-        "version": "1.0.0",
-        "platform": "vercel",
-        "database": "prisma + postgresql"
+        "version": "1.0.2"
     }
 
 @app.get("/health")
-async def health():
-    """Health check endpoint"""
-    try:
-        # Check environment variables
-        env_vars = {
-            "DATABASE_URL": bool(os.getenv("DATABASE_URL")),
-            "GROQ_API_KEY": bool(os.getenv("GROQ_API_KEY")),
-            "SECRET_KEY": bool(os.getenv("SECRET_KEY"))
-        }
-        
-        configured_count = sum(env_vars.values())
-        total_vars = len(env_vars)
-        
-        return {
-            "status": "healthy",
-            "message": "API is running successfully",
-            "database": "prisma",
-            "environment_variables": {
-                "configured": f"{configured_count}/{total_vars}",
-                "DATABASE_URL": "✅ Set" if env_vars["DATABASE_URL"] else "❌ Missing",
-                "GROQ_API_KEY": "✅ Set" if env_vars["GROQ_API_KEY"] else "❌ Missing",
-                "SECRET_KEY": "✅ Set" if env_vars["SECRET_KEY"] else "❌ Missing"
-            },
-            "ready": configured_count == total_vars
-        }
-    except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": f"Health check failed: {str(e)}"
-            }
-        )
-
-@app.get("/api/health")
-async def api_health():
-    """Alternative health endpoint for /api/health"""
-    return await health()
-
-@app.get("/features")
-async def get_features():
-    """List available features"""
+def health():
     return {
-        "features": [
-            {
-                "name": "15-Source Content Intelligence",
-                "sources": ["Reddit", "TikTok", "Pinterest", "Instagram", "Medium", "GitHub", "ProductHunt"],
-                "status": "available"
-            },
-            {
-                "name": "AI-Powered PDF Reports",
-                "description": "LLM-generated insights and recommendations",
-                "status": "available"
-            },
-            {
-                "name": "Field-Specific Trending",
-                "categories": ["Fashion", "Technology", "Marketing"],
-                "status": "available"
-            },
-            {
-                "name": "Prisma Database",
-                "type": "PostgreSQL",
-                "status": "configured" if os.getenv("DATABASE_URL") else "needs_setup"
-            }
-        ]
-    }
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    """Handle all uncaught exceptions"""
-    return JSONResponse(
-        status_code=500,
-        content={
-            "error": "Internal server error",
-            "message": str(exc),
-            "status": "error"
+        "status": "healthy",
+        "message": "API is working!",
+        "environment": {
+            "DATABASE_URL": "✅ Set" if os.environ.get("DATABASE_URL") else "❌ Missing",
+            "GROQ_API_KEY": "✅ Set" if os.environ.get("GROQ_API_KEY") else "❌ Missing", 
+            "SECRET_KEY": "✅ Set" if os.environ.get("SECRET_KEY") else "❌ Missing"
         }
-    )
-
-# Export for Vercel (this is the key part)
-handler = app
+    }
