@@ -1,6 +1,10 @@
 {
-  "version": 2,
-  "name": "tushle-ai-dashboard",
+  "name": "tushle-dashboard",
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.9"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -10,20 +14,5 @@
       "source": "/(.*)",
       "destination": "/frontend/dist/$1"
     }
-  ],
-  "installCommand": "cd frontend && npm install",
-  "buildCommand": "cd frontend && npm run build",
-  "outputDirectory": "frontend/dist",
-  "env": {
-    "GROQ_API_KEY": "@groq_api_key",
-    "SECRET_KEY": "@secret_key",
-    "DATABASE_URL": "@database_url"
-  },
-  "functions": {
-    "api/index.py": {
-      "runtime": "python3.9",
-      "maxDuration": 30,
-      "memory": 1024
-    }
-  }
+  ]
 }
