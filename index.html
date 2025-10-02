@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tushle AI Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .description {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .api-status {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        .btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚀 Tushle AI Dashboard</div>
+        <div class="description">
+            AI-Powered Content Intelligence & Trending Analysis Platform
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>📊 15-Source Intelligence</h3>
+                <p>Reddit, TikTok, Pinterest, Instagram, Medium, GitHub & more</p>
+            </div>
+            <div class="feature">
+                <h3>🤖 AI-Powered Insights</h3>
+                <p>LLM-generated recommendations and trending analysis</p>
+            </div>
+            <div class="feature">
+                <h3>📄 Smart PDF Reports</h3>
+                <p>Automated content reports with actionable insights</p>
+            </div>
+            <div class="feature">
+                <h3>🎯 Field-Specific Content</h3>
+                <p>Fashion, Technology, Marketing - tailored to your industry</p>
+            </div>
+        </div>
+
+        <div class="api-status">
+            <h3>🔗 API Status</h3>
+            <p id="api-status">Checking API connection...</p>
+            <a href="/api/health" class="btn" target="_blank">Test API Health</a>
+            <a href="/api/" class="btn" target="_blank">View API Root</a>
+            <button onclick="testAPI()" class="btn">Auto Test Connection</button>
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <p>🎉 <strong>Deployment Successful!</strong></p>
+            <p>Your Tushle AI Dashboard is running on Vercel with Prisma database</p>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            try {
+                document.getElementById('api-status').textContent = 'Testing API connection...';
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                document.getElementById('api-status').innerHTML = `
+                    ✅ API Connected Successfully!<br>
+                    Status: ${data.status}<br>
+                    Message: ${data.message}<br>
+                    Database: ${data.database || 'Connected'}
+                `;
+            } catch (error) {
+                document.getElementById('api-status').innerHTML = `
+                    ❌ API Connection Failed<br>
+                    Error: ${error.message}<br>
+                    <small>This might be normal if environment variables aren't set yet</small>
+                `;
+            }
+        }
+
+        // Test API on page load
+        setTimeout(testAPI, 1000);
+    </script>
+</body>
+</html>
