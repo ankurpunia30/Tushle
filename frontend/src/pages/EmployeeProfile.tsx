@@ -26,68 +26,6 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 
-interface Employee {
-  id: number;
-  email: string;
-  full_name: string;
-  role: string;
-  is_active: boolean;
-  created_at: string;
-  phone?: string;
-  department?: string;
-  position?: string;
-  hire_date?: string;
-  salary?: number;
-}
-
-interface TaskAnalytics {
-  total_tasks: number;
-  completed_tasks: number;
-  in_progress_tasks: number;
-  overdue_tasks: number;
-  total_hours_logged: number;
-  avg_completion_time: number;
-  productivity_score: number;
-  tasks_by_month: Array<{ month: string; count: number }>;
-  tasks_by_priority: Array<{ priority: string; count: number }>;
-  recent_tasks: Array<any>;
-}
-
-interface FinanceAnalytics {
-  total_revenue_generated: number;
-  billable_hours: number;
-  hourly_rate: number;
-  monthly_earnings: Array<{ month: string; amount: number }>;
-  project_earnings: Array<{ project: string; amount: number }>;
-  efficiency_rating: number;
-}
-
-interface ProjectAnalytics {
-  active_projects: number;
-  completed_projects: number;
-  total_projects: number;
-  project_success_rate: number;
-  projects: Array<{
-    id: number;
-    name: string;
-    status: string;
-    progress: number;
-    client: string;
-    start_date: string;
-    end_date?: string;
-    budget: number;
-  }>;
-}
-
-interface LeadAnalytics {
-  leads_generated: number;
-  leads_converted: number;
-  conversion_rate: number;
-  monthly_leads: Array<{ month: string; leads: number; converted: number }>;
-  lead_sources: Array<{ source: string; count: number }>;
-  avg_lead_value: number;
-}
-
 export default function EmployeeProfile() {
   const { id } = useParams();
   const navigate = useNavigate();

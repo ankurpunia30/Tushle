@@ -24,13 +24,6 @@ interface Employee {
   created_at: string;
 }
 
-interface EmployeeStats {
-  total_employees: number;
-  active_employees: number;
-  total_tasks_assigned: number;
-  completed_tasks: number;
-}
-
 // Simple Badge component
 const Badge: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${className}`}>
