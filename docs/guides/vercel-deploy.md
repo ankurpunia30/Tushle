@@ -53,6 +53,7 @@ vercel env add DATABASE_URL
 
 1. **Push to GitHub**
    ```bash
+   # First create repository at: https://github.com/ankurpunia30/tushle-ai-dashboard
    git add .
    git commit -m "Deploy to Vercel"
    git push origin main

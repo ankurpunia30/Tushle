@@ -34,8 +34,9 @@ git commit -m "Initial commit: Tushle AI Dashboard ready for Vercel"
 
 ### 2. Push to GitHub
 ```bash
-# Create repository on GitHub, then:
-git remote add origin https://github.com/yourusername/tushle-ai-dashboard.git
+# Create repository on GitHub first at: https://github.com/ankurpunia30/tushle-ai-dashboard
+# Then push:
+git remote add origin https://github.com/ankurpunia30/tushle-ai-dashboard.git
 git branch -M main
 git push -u origin main
 ```
