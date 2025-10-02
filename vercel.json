@@ -1,15 +1,10 @@
 {
+  "version": 2,
+  "name": "tushle-dashboard",
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python@4.0.0"
-    },
-    {
-      "src": "frontend/package.json", 
-      "use": "@vercel/static-build@2.0.0",
-      "config": {
-        "distDir": "dist"
-      }
+      "use": "@vercel/python@4.2.1"
     }
   ],
   "routes": [
@@ -19,7 +14,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/dist/$1"
+      "dest": "/frontend/index.html"
     }
   ]
 }
