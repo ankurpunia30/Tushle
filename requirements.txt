@@ -1,32 +1,16 @@
-# Core FastAPI dependencies
+# Core FastAPI dependencies for Vercel
 fastapi==0.104.1
-uvicorn[standard]==0.24.0
-python-multipart==0.0.6
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
+uvicorn==0.24.0
 python-dotenv==1.0.0
 
-# Database
+# Database (Vercel-compatible)
 prisma==0.11.0
-psycopg2-binary==2.9.7
 
 # HTTP client
 httpx==0.25.2
-aiohttp==3.9.1
 
-# Data processing
-pandas==2.1.3
-numpy==1.25.2
-
-# Web scraping (lightweight)
-beautifulsoup4==4.12.2
-lxml==4.9.3
-
-# PDF generation (essential only)
+# PDF generation
 reportlab==4.0.6
-
-# Date/time handling
-python-dateutil==2.8.2
 
 # Email validation
 email-validator==2.1.0

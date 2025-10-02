@@ -19,7 +19,7 @@ app = FastAPI(title="Tushle AI Dashboard API")
 
 @app.get("/")
 async def root():
-    return {"message": "Tushle AI Dashboard API", "status": "active", "database": "prisma"}
+    return {"message": "Tushle AI Dashboard API v2", "status": "active", "database": "prisma"}
 
 @app.get("/health")
 async def health():
